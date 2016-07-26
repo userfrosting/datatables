@@ -1,0 +1,7 @@
+"columns": [
+{% for column in dtoptions.fields %}
+    {% if(column.visible) %}
+        {% include column.getTemplate %}
+    {% endif %}
+{% endfor %}
+]

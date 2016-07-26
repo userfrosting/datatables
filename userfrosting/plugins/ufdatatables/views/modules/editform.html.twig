@@ -1,0 +1,43 @@
+{% import "modules/macros.html.twig" as macros %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit Row</h3>
+        <span style="padding:0px 5px;margin:0px 5px;" id="inlineedit_i_{{rowdata.id}}_result">
+        </span>
+    </div>
+    <div class="panel-body">
+        <form action="#" role="form" method="post" class="inline_edit_frm" id="inlineedit_i_{{rowdata.id}}" 
+              enctype="multipart/form-data" onSubmit="submitEditRowForm(\'{{rowdata.id}}\', \'{{dtoptions.htmlid}}\',this);return false;"> 
+            <input type="hidden" name="erec[id]" value="{{rowdata.id}}">
+            <input type="hidden" name="source" value="{{dtoptions.htmlid}}">
+            <div class="row">
+                <div class="col-md-4">
+                    {% set all_cols = 3%}
+                    {% set this_cols = 0%}
+                    {% for column in dtoptions.fields %}
+                        {% if(column.showin_editform=='Y') %}
+                            {% if(column.type=='select')%}
+                                {% set options_array=getLookupOptions(column.lookup_cat) %}
+                                {{ macros.input_select((column.db_field_name~'_i'), column.db_name, column.label,'',options_array,'','')}}
+                            {% elseif(column.type=='textarea')%}
+                                {{ macros.input_textarea((column.db_field_name~'_i'), column.db_name, column.label,'', column.label,3,60,'', dtdata[column.db_name]|default(''), '')}}
+                            {% else%}
+                                {{ macros.input_text(column.type,(column.db_name~'_i'), column.db_name, column.label,'', column.label,'', dtdata[column.db_name]|default(''), '')}}
+                            {% endif %}
+                            {% set this_cols = this_cols+1 %}
+                        </div>
+                        {% if(this_cols==3)%}
+                            {% set this_cols = 0%}
+                        </div>
+                        <div class="row">
+
+                        {% endif %}
+                        <div class="col-md-4">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {{ macros.input_button('edit_submit_i', 'edit_submit', 'btn-primary', 'Save') }}
+        </form>  
+    </div>
+</div>

@@ -1,0 +1,104 @@
+<script type="text/javascript" id="dadtatable_jsfunction">
+
+    
+    var page_dttables = [];
+    function createDatatableOnPage(dtoptions)
+    {
+        var oTable;
+        var final_dturl;
+        var oldStart = 0;
+        var divid = '#' + dtoptions.htmlid;
+        var dtbase_url = dtoptions.ajax_url;
+//        var dtbase_url = dtoptions.ajax_url + "?id=" + dtoptions.htmlid + "&dtjsvar=" + dtoptions.dtjsvar + "&source=" +
+//                dtoptions.source + "&thispage=" + dtoptions.thispage + "&show_detail=" + dtoptions.show_detail + "&ajax_detail=" + dtoptions.ajax_detail;
+        var fe_filter = '';
+        if (jQuery('#' + dtoptions.htmlid + '_filter').length)
+        {
+            fe_filter = "&fe_filter=" + fe_filter;
+        }
+
+        final_dturl = dtbase_url + dtoptions.extra_param + fe_filter;
+
+        oTable = jQuery(divid).dataTable({            {#            "responsive": {
+                "details": {
+                    "renderer": function (api, rowIdx) {
+                        // Select hidden columns for the given row
+                        var data = api.cells(rowIdx, ':hidden').eq(0).map(function (cell) {
+                            var header = jQuery(api.column(cell.column).header());
+                            return '<tr>' +
+                                    '<td>' +
+                                    header.text() + ':' +
+                                    '</td> ' +
+                                    '<td>' +
+                                    api.cell(cell).data() +
+                                    '</td>' +
+                                    '</tr>';
+                        }).toArray().join('');
+                        return data ? jQuery('<table/>').append(data) : false;
+                    }
+                }
+            }, #}
+                        "oSearch": {"sSearch": dtoptions.initial_search},
+                        "columns": dtoptions.columns,
+                        "pageLength": dtoptions.pagelength,
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax": {"url": final_dturl,
+                            "type": "POST",
+                            "data": {
+                                'request': 'get_idtdata',
+                                'csrf_token': jQuery('meta[name=csrf_token]').attr("content"),
+                                dtoptions : {id:dtoptions.htmlid,dtjsvar:dtoptions.dtjsvar,source:dtoptions.source,
+            thispage:dtoptions.thispage,show_detail:dtoptions.show_detail,
+            ajax_detail:dtoptions.ajax_detail,data_options:dtoptions.data_options}
+                            }
+                        },
+                        //        "sDom": 'T<"clear">lfrtip',
+//            "dom": "<'fg-toolbar ui-toolbar ui-widget-header ui-helper-clearfix ui-corner-tl ui-corner-tr " +
+//                    "row'<'col-md-6'f><'col-md-4'><'col-md-2'l>r>t<'row'<'col-md-6'i>" +
+//                    "<'col-md-6'p>>S",
+                        "dom": "<'dtable-heading' <'well1 cddatatable-topbox " +
+                                "row'<'col-md-6'f><'col-md-6'l>r>t<'row'<'col-md-6'i>" +
+                                "<'col-md-6'p> > >S",
+                        "tableTools": {
+                            "sSwfPath": dtoptions.swf_path,
+                            "aButtons": [
+                                "copy",
+                                "print",
+                                {
+                                    "sExtends": "collection",
+                                    "sButtonText": 'Save <span class="caret" />',
+                                    "aButtons": ["csv", "xls", "pdf"]
+                                }
+                            ]
+                        },
+                        "fnDrawCallback": function (settings) {
+                            var thisapi=this.api();
+//                            if (o._iDisplayStart != oldStart) {
+//                                jQuery('html,body').animate({scrollTop: 0}, 2000);
+//                            }
+                        }
+/*This adds column level automatic filter. Needs some debugging
+ *                         ,initComplete: function () {
+                            var column = this.api().column(9);
+                            var select = $('<select class="filter"><option value=""></option></select>')
+                                    .appendTo('#selectTriggerFilter')
+                                    .on('change', function () {
+                                        var val = $(this).val();
+                                        column.search(val ? '^' + $(this).val() + '$' : val, true, false).draw();
+                                    });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            });
+                        }
+*/
+{# trying to set the sort order
+"aaSorting": [dtoptions.aasorting] #}
+                    });
+                    return oTable;
+                }
+</script>
+<style>
+    .cddatatable-topbox{padding:5px;}
+</style>

@@ -1,0 +1,11 @@
+{% include('components/common/user-info-panel.twig') %}
+
+<script type="text/javascript" id="datatablejs01_edituser">
+    jQuery(document).ready(function () {
+        ufFormSubmit(jQuery("form[name='user']"),{{user_validators|default('{}')|raw}} ,
+                jQuery("#userfrosting-alerts"),
+                function (data, statusText, jqXHR) {
+                }
+        );
+    });
+</script>

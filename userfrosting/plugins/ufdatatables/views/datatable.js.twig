@@ -1,0 +1,12 @@
+<script type="text/javascript" id="datatablejs01_{{dtoptions.htmlid}}">
+    jQuery(document).ready(function () {
+        page_dttables['{{dtoptions.htmlid}}'] = [];
+        page_dttables['{{dtoptions.htmlid}}']['dtoptions'] ={{ dtoptions|json_encode()|raw }} ;
+        page_dttables['{{dtoptions.htmlid}}']['dtoptions']['columns'] = [
+        {% for column in dtoptions.fields %}
+            {% include "modules/column.html.twig" %}
+        {% endfor %} ];
+        page_dttables['{{dtoptions.htmlid}}']['dtobject'] = createDatatableOnPage(page_dttables['{{dtoptions.htmlid}}']['dtoptions']);
+        });
+</script>
+{#    {%  include 'modules/editform.html.twig' %} #}

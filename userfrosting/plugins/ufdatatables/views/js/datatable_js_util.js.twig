@@ -1,0 +1,119 @@
+<script type="text/javascript" id='datatable_util02'>
+    function makeAjaxCall(par_url, par_form, par_action, par_retid)
+    {
+        var var_frmdata = new FormData(jQuery(par_form)[0]);
+        var wp_ajaxurl = par_url;
+        var var_frmid = jQuery(par_form).attr('id');
+
+        if (par_action === 'capAssignService')
+        {
+            var var_cnotes = jQuery(par_form).closest('.common_service_notes');
+            jQuery("#" + var_frmid + " .service_notes_inline").val(jQuery(var_cnotes).val());
+            var var_vendorsel = var_frmid.replace('svendor_frm_i', 'assign_vendor');
+            if (jQuery('#' + var_vendorsel).val() === -1)
+            {
+                jQuery('#' + par_retid).html('Please select vendor');
+                return false;
+            }
+
+        }
+
+        jQuery.ajax({
+            url: wp_ajaxurl + '?action=' + par_action,
+            type: 'POST',
+            data: var_frmdata,
+            cache: false,
+            dataType: 'json',
+            processData: false, // Don't process the files
+            contentType: false,
+            success: function (ret_data, textStatus, jqXHR)
+            {
+                if (ret_data.success === 'Y')
+                {
+                    // Success so call function to process the form
+                    //                    submitForm(event, var_data);
+                    console.log('Success: ' + ret_data.error + ' Call: ' + par_action);
+                    if (jQuery('#' + par_retid).length) {
+                        jQuery('#' + par_retid).html('Done');
+                    }
+                } else
+                {
+                    // Handle errors here
+                    console.log('ERRORS: ' + ret_data.error);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                // Handle errors here
+                console.log('ERRORS: ' + textStatus);
+                // STOP LOADING SPINNER
+            }
+        });
+    }
+
+    function getURLParameters(url)
+    {
+
+        var result = {};
+        var searchIndex = url.indexOf("?");
+        if (searchIndex === -1)
+            return result;
+        var sPageURL = url.substring(searchIndex + 1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++)
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            result[sParameterName[0]] = sParameterName[1];
+        }
+        return result;
+    }
+
+
+    jQuery.fn.dataTable.Api.register('column().title()', function () {
+        var colheader = this.header();
+        return jQuery(colheader).text().trim();
+    });
+
+    /*    
+     $(document).ready(function() {
+     $('#tableTrigger').DataTable({
+     "lengthMenu": [
+     [10, 25, 50, 100, -1],
+     [10, 25, 50, 100, "All"]
+     ],
+     "scrollY": "200px",
+     "dom": 'rtipS',
+     // searching: false,
+     "deferRender": true,
+     initComplete: function () {
+     var column = this.api().column(1);
+     var select = $('<select class="filter"><option value=""></option></select>')
+     .appendTo('#selectTriggerFilter')
+     .on('change', function () {
+     var val = $(this).val();
+     column.search(val ? '^' + $(this).val() + '$' : val, true, false).draw();
+     });
+     
+     column.data().unique().sort().each(function (d, j) {
+     select.append('<option value="' + d + '">' + d + '</option>');
+     });
+     }
+     });
+     }); 
+     */
+    function hideDetailRow_DT(oTableid, buttonthis)
+    {
+        if (oTableid !== 'none')
+        {
+//                reloadDatatable(oTableid);
+            var oTable_full = [];
+            oTable_full = page_dttables[oTableid];
+            var oTable = oTable_full['dtobject'];
+            var tr = jQuery(buttonthis).closest('tr').prev();
+            var row = oTable.api().row(tr);
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+    }
+
+</script>

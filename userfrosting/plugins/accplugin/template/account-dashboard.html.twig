@@ -1,0 +1,101 @@
+{% extends "layouts/layout-dashboard.twig" %}
+{% set page_group = 'dashboard' %}
+{% set page_group1 = ["ufdatatable"] %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "CD Datatables",
+        "description" : "Datatables page."
+    }) %}
+    {{ parent() }}
+    {% block dashboard_page_css %}
+        <!-- Page stylesheets -->
+        {% for pagegrp in page_group1 %}
+            {% for item in includeCSS(pagegrp) %}
+                <link rel="stylesheet" href="{{item}}" type="text/css" >
+            {% endfor %}
+        {% endfor %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container1">
+        <p>Welcome {{user.display_name}}</p>
+        <div class="ilba_tabs" style='border:1px solid lightgray;border-radius:5px;padding:2px;'>
+            {% set tabactive =' active ' %}
+            <ul class="nav nav nav-pills ilba-pills" style="border-bottom: none;">
+                <li style="border-bottom: 1px dotted lightgray;" class=' {{tabactive}} '
+                    onClick="reloadDatatable('{{ userlist.htmlid }}');">
+                    <a data-toggle="tab" href="#cddtab-1">Users</a>
+                </li>
+                {% set tabactive ='  ' %}
+                <li style="border-bottom: 1px dotted lightgray;" class=' {{tabactive}} '
+                    onClick="reloadDatatable('{{ grouplist.htmlid }}');">
+                    <a data-toggle="tab" href="#cddtab-2">Groups</a>
+                </li>
+                {% set tabactive ='  ' %}
+            </ul>
+            {% set tabactive =' active ' %}
+            <div class="tab-content " style="min-height:600px;">
+                <div id="cddtab-1" class="userlist tab-pane {{tabactive}} ">
+                    <div class='row'>
+                        <div class='col-md-12 userlist_datatable' >
+                            {{ userlist.html | raw }}
+                        </div>
+                        {#                        <div class='col-md-6' id="{{userlist.htmlid}}edit_i">
+                                                </div>            
+                        #}
+                    </div>
+                </div>
+                {% set tabactive ='  ' %}
+                <div id="cddtab-2" class="grouplist tab-pane {{tabactive}} ">
+                    <div class='row'>
+                        <div class='col-md-12 grouplist_datatable' >
+                            {{ grouplist.html | raw }}
+                        </div>
+                    </div>
+                </div>
+                {% set tabactive ='  ' %}
+            </div>
+        </div>
+    </div>        
+    <!-- /.row -->
+{% endblock %}
+{% block page_scripts %}
+    {% for pagegrp in page_group1 %}
+        {% for item in includeJSBottom(pagegrp) %}
+            <script src="{{item}}" ></script>
+        {% endfor %}
+    {% endfor %}
+    <style>
+        table.dataTable thead .sorting {background:none !important;}
+        #mylist_dt_2 .pk_id {width:35%;}
+        #mylist_dt_3 .pk_id {width:35%;}
+        #mylist_dt_4 .pk_id {width:35%;}
+        .paginate_button {padding:0px !important;}
+        .lbaoffer_datatable th.offer_date {width:25% !important;}
+    </style>
+    <div id="record_status_div_i" style="display:none">
+        <select  class = " selectpicker form-control disable-text-shadow " style="width:100%;" id="status_i" name="erec[status]" >
+            <option value="A">Active</option>
+            <option value="I">Inactive</option>
+        </select>
+    </div>
+    {%  include 'js/datatable_js_function.js.twig' %}
+    {%  include 'js/datatable_js_editrow.js.twig' %}
+    {%  include 'js/datatable_js_util.js.twig' %}
+
+    {{ userlist.js | raw }}
+    {{ grouplist.js | raw }}
+
+    <script type="text/javascript" id="datatablejs01_cddatatable">
+                        jQuery(document).ready(function () {
+                            jQuery('#{{userlist.htmlid}}_wrapper').removeClass('form-inline');
+                        });
+    </script>
+{% endblock %}

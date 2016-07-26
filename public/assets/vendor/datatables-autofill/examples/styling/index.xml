@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="0">
+
+<title lib="AutoFill">Styling</title>
+
+<js lib="jquery" />
+<info><![CDATA[
+
+AutoFill, like all other DataTables extensions, can be styled by various styling frameworks (such as Bootstrap) allowing seamless integration of AutoFill into the look and feel of your site / app.
+
+The examples in this section demonstrate this styling integration.
+
+]]></info>
+
+</dt-example>

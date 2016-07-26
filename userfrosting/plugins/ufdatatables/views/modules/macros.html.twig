@@ -1,0 +1,54 @@
+{% macro error_block(errors) %}
+    {% if errors %}
+        <span class="help-block">
+            <ul>
+                {% for err in errors %}
+                    <li>{{ err }}</li>
+                    {% endfor %}
+            </ul>
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{% macro input_text(type, id, name, label, class, placeholder, size, value, errors) %}
+    {% import _self as form %}
+    <div class="form-group {% if errors %}has-error{% endif %}">
+        <label class="control-label " id="{{id | default("input_" ~ name ~ "_i" ) }}" >{{ label }}</label>
+        <input class="{{class}} form-control" type="{{ type|default('text') }}" id="{{id | default("input_" ~ name ~ "_i" ) }}" name="{{ name }}" 
+               placeholder="{{ placeholder|default(label) }}"  value="{{ value | e }}" size="{{ size|default(20) }}" >
+        {{ form.error_block(errors) }}
+    </div>
+{% endmacro %}
+
+{% macro input_select(id, name, label, class, option_array, value, errors, htmloptions = { multiple: false, include_blank: true }) %}
+    {% import _self as form %}
+    <div class="form-group {% if errors %}has-error{% endif %}">
+        <label class="control-label" for="input_{{ name }}">{{ label }}</label>
+        <select id="{{id | default("input_" ~ name ~ "_i" ) }}"  name="{{ name }}" class="{{class}} selectpicker form-control disable-text-shadow" {% if htmloptions.multiple %}multiple{% endif %}>
+            {% if htmloptions.include_blank %}
+                <option disabled selected></option>
+            {% endif %}
+            {% for seloption in option_array %}
+                <option value="{{seloption.value}}" {% if value == seloption.value %}selected{% endif %}>{{ seloption.text|default(seloption.value) }}</option>
+            {% endfor %}
+        </select>
+        {{ form.error_block(errors) }}
+    </div>
+{% endmacro %}
+
+{% macro input_textarea(id, name, label, class, placeholder, rows, cols, value, errors) %}
+    {% import _self as form %}
+
+    <div class="form-group {% if errors %}has-error{% endif %}">
+        <label class="control-label " for="{{id | default("input_" ~ name ~ "_i" ) }}" >{{ label }}</label>
+        <textarea rows="{{rows|default(3)}}"  cols="{{cols|default(60)}}" class="form-control {{class}}" id="{{id | default("input_" ~ name ~ "_i" ) }}"  
+                  name="{{ name }}" placeholder="{{ placeholder }}">{{ value }}</textarea>
+        {{ form.error_block(errors) }}
+    </div>
+{% endmacro %}    
+
+{% macro input_button(id, name, class, label) %}
+    <button type="submit" id="{{id | default('btn_' ~ name ~ '_i' ) }}" 
+            name="{{ name }}" class="btn {{class|default('btn-primary')}}">{{label}}
+    </button>
+{% endmacro %}

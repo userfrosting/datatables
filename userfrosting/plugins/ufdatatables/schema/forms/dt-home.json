@@ -1,0 +1,10 @@
+{
+"draw" : {"validators" : { } },
+"length" : {"validators" : { } },
+"order" : {"validators" : { } },
+"request" : {"validators" : { } },
+"search" : {"validators" : { } },
+"start" : {"validators" : { } },
+"columns" : {"validators" : { } },
+"csrf" : {"validators" : { } }
+}
