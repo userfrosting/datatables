@@ -88,6 +88,18 @@ class cdUserDTController extends \UserFrosting\ufDatatables\ufDatatableControlle
             return $var_pkformatter;
     }
 
+    public function setFormatters() {
+        parent::setFormatters();
+
+//        error_log("Line 90 checking user role");
+        $this->_formatters['email'] = function( $d, $row ) {
+            if ($d != '')
+                return "<a href='mailto:$d'>$d</a>";
+            else
+                return $d;
+        };
+    }
+    
     public function getDataFromSource($getparam, $par_nondbcols = 'none', $par_where = '', $par_filter = '', $par_order = '') {
         $par_where = $this->_where_criteria;
         $par_order = $this->_order_by;
