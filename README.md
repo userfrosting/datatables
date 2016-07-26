@@ -35,7 +35,7 @@ This contains the datatables javascript libraries along with some plugins. These
  - Copy userfrosting/plugins/ufdatatables (this is the main datatables plugin)
  - Copy userfrosting/plugins/accplugin (this is an account management plugin that uses the datatables). We can add a ton of features using the setFormatters() functions, i will add more examples in the near future.
 
-### Not just launch the plugin page 
+### Now just launch the plugin page 
 - First login as the administrator 
 - Then go to http://yourufhome/accplugin
 
